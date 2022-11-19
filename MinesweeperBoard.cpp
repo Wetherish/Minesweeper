@@ -8,16 +8,16 @@
 
 using namespace std;
 void MinesweeperBoard::clear_board()
-//czyscimy
+
 {
-    Field czyszczenie;
-    czyszczenie.hasMine = 0;
-    czyszczenie.hasFlag = 0;
-    czyszczenie.isRevealed = 0;
-    for(int wiersz = 0; wiersz <= height; wiersz++)
+    Field set_zero;
+    set_zero.hasMine = 0;
+    set_zero.hasFlag = 0;
+    set_zero.isRevealed = 0;
+    for(int row = 0; row <= height; row++)
     {
-        for(int kolumna = 0; kolumna <= width; kolumna++)
-            board[kolumna][wiersz] = czyszczenie;
+        for(int column = 0; column <= width; column++)
+            board[column][row] = set_zero;
     }
 }
 
@@ -54,55 +54,33 @@ MinesweeperBoard::MinesweeperBoard(int xwidth, int xheight, GameMode  mode)
     height = xheight;
     status = RUNNING;
 
-    // ustawic szerokosc
-
-
-    int PolePokryte = 0;
+    int field_covered = 0;
     clear_board();
     if(mode == DEBUG)
     {
-
-        Field OpcjaA;   //zawiera minę, nie ma flagi i nie zostało odkryte
-        Field OpcjaB;   //jest odkryte, nie ma miny i nie ma flagi
-        Field OpcjaC;   //zawiera minę i flagę, nie jest odkryte
-
-        OpcjaA.hasMine = true;
-        OpcjaA.hasFlag = false;
-        OpcjaA.isRevealed = false;
-
-        OpcjaB.hasMine = false;
-        OpcjaB.hasFlag = false;
-        OpcjaB.isRevealed = false;
-
-        OpcjaC.hasMine = true;
-        OpcjaC.hasFlag = true;
-        OpcjaC.isRevealed = false;
-        board[0][0] = OpcjaA;
-        board[1][1] = OpcjaB;
-        board[0][2] = OpcjaC;
 
     }
     if(mode == EASY)
     {
         double temp1 = double(height) * double(width) * 0.1;
         temp1 = ceil(temp1);
-        PolePokryte = int(temp1);
+        field_covered = int(temp1);
     }
     if(mode == NORMAL)
     {
 
         double temp2 = double(height)  * double(width) * 0.2;
         temp2 = ceil(temp2);
-        PolePokryte = int(temp2);
+        field_covered = int(temp2);
     }
     if(mode == HARD)
     {
         double temp3 = double(height) * double(width) * 0.3;
         temp3 = ceil(temp3);
-        PolePokryte = temp3;
+        field_covered = temp3;
     }
-    //cout << PolePokryte << endl;
-    for (int IloscBomb = 0; IloscBomb < PolePokryte; IloscBomb++)
+
+    for (int IloscBomb = 0; IloscBomb < field_covered; IloscBomb++)
     {
         int RandomHeight = rand() % height;
         int RandomWidth = rand() % width;
@@ -112,16 +90,12 @@ MinesweeperBoard::MinesweeperBoard(int xwidth, int xheight, GameMode  mode)
         }
         board[RandomHeight][RandomWidth].hasMine = true;
     }
-        //debug_display();
-       //cout<<getMineCount()<<endl;
-        }
+}
 
 
 bool MinesweeperBoard::hasFlag(int row, int col) const
 {
-    // return true if the field at (row,col) position was marked with flag
-    // return false if any of the following is true:
-    // - row or col is outside board
+
 
     if(onBoard(row, col) == false)
     {
@@ -134,27 +108,14 @@ bool MinesweeperBoard::hasFlag(int row, int col) const
     }
     return board[row][col].hasFlag;
 
-//    if (board[row][col].hasFlag == true)
-//        {
-//            return true;
-//    }
-//    if (board[row][col].hasFlag == false)
-//    {
-//        return false;
-//    }
-//    if (board[row][col].isRevealed == true)
-//    {
-//        return false;
-//    }
-// napisac jesli jest poza plansza!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 int MinesweeperBoard::countMines(int row, int col) const {
     int licznik=0;
-    for(int kolumna = col -1; kolumna <= col + 1; kolumna++)
+    for(int column = col -1; column <= col + 1; column++)
         for(int rzad = row - 1; rzad <= row + 1; rzad++)
         {
-            if(onBoard(rzad, kolumna) and board[rzad][kolumna].hasMine)
+            if(onBoard(rzad, column) and board[rzad][column].hasMine)
                 licznik++;
         }
     return licznik-int(board[row][col].hasMine);
@@ -208,17 +169,7 @@ GameState MinesweeperBoard::getGameState() const {
 
 void MinesweeperBoard::revealField(int row, int col)
 {
-    // try to reveal the field at (row,col)
-    // Do nothing if any of the following is true
-    // - field was already revealed
-    // - either row or col is outside board
-    // - game is already finished
-    // - there is a flag on the field
-    //
-    // If the field was not revealed and there is no mine on it - reveal it
-    // If the field was not revealed and there is a mine on it:
-    // - if its the first player action - move mine to another location, reveal field (not in DEBUG mode!)
-    // - reveal it and finish game
+
    if((isRevealed(row, col) == true) or !onBoard(row,col) or (getGameState() != RUNNING) or (hasFlag(row, col) == true))
    {
        return;
@@ -231,14 +182,14 @@ void MinesweeperBoard::revealField(int row, int col)
        if (liczRevealed() == 0)
        {
 
-           int IloscBomb = 0;
-           for (IloscBomb = 0; IloscBomb < 1; IloscBomb++)
+           int bombs_ctr = 0;
+           for (bombs_ctr = 0; bombs_ctr < 1; bombs_ctr++)
            {
                int RandomHeight = rand() % height;
                int RandomWidth = rand() % width;
                if ((board[RandomHeight][RandomWidth].hasMine == true) or (row == RandomWidth   and col == RandomHeight))
                {
-                   IloscBomb -= 1;
+                   bombs_ctr -= 1;
                }
                 else
                   board[RandomHeight][RandomWidth].hasMine = true;
@@ -298,23 +249,21 @@ char MinesweeperBoard::getFieldInfo(int row, int col) const
         return char(countMines(row, col)) + '0';
     }
     return '#';
-     //if the field is revealed and has 0 mines around        - return ' ' (space) character
-     //if the field is revealed and has some mines around     - return '1' ... '8' (number of mines as a digit)
 }
 void MinesweeperBoard::debug_display() const
 {
-    for (int wiersz = 0; wiersz < height; wiersz++) {
-        for (int kolumna = 0; kolumna < width; kolumna++) {
+    for (int row = 0; row < height; row++) {
+        for (int column = 0; column < width; column++) {
             cout << "[";
-            if (board[wiersz][kolumna].hasMine)
+            if (board[row][column].hasMine)
                 cout << "M";
             else
                 cout << ".";
-            if (board[wiersz][kolumna].isRevealed)
+            if (board[row][column].isRevealed)
                 cout << "O";
             else
                 cout << ".";
-            if (board[wiersz][kolumna].hasFlag)
+            if (board[row][column].hasFlag)
                 cout << "f";
             else
                 cout << ".";
@@ -325,11 +274,11 @@ void MinesweeperBoard::debug_display() const
 
     cout << endl;
 
-    for (int wiersz = 0; wiersz < height; wiersz++)
+    for (int row = 0; row < height; row++)
     {
-        for (int kolumna = 0; kolumna < width; kolumna++)
+        for (int column = 0; column < width; column++)
         {
-            cout << "[" << getFieldInfo(wiersz, kolumna) << "]";
+            cout << "[" << getFieldInfo(row, column) << "]";
         }
         cout << endl;
     }

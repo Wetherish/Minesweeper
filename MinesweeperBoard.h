@@ -26,11 +26,11 @@ class MinesweeperBoard
 
 {
 
-        Field board[100][100];    // 100-elementowa tablica, 100-elementowych tablic typu Field
-        int width;                // rzeczywista szerokość planszy
+        Field board[100][100];
+        int width;
         int height;
         GameState status;
-    // rzeczywista wysokość planszy
+
         bool onBoard(int row,int col) const;
 
 

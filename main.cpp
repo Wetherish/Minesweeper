@@ -18,20 +18,15 @@ int main() {
 
     intro();
     srand(time(nullptr));
-    MinesweeperBoard board(10,10, EASY);
+    MinesweeperBoard board(30,30, EASY);
     MSSFMLView view (board);
-    sf::RenderWindow window(sf::VideoMode(1920, 850), "Grafika w C++/SFML");
+    sf::RenderWindow window(sf::VideoMode(1920, 850), "minesweeper");
     MSSFMLCONTROL control (board, view);
     window.setVerticalSyncEnabled(false);
     window.setFramerateLimit(30);
-    // symulujemy rozgrywkę
 
-//    board.revealField(3, 3);
-//    board.revealField(0, 0);
-//    board.revealField(1, 1);
-//   board.revealField(3, 0);
-//    board.toggleFlag(5,5);
-//    board.debug_display();
+    board.debug_display();
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -63,6 +58,6 @@ int main() {
         window.display();
     }
 
-// play.akcja();
+
     return 0;
     }

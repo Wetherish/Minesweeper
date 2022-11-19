@@ -12,7 +12,6 @@ using namespace std;
 class MSSFMLCONTROL {
     MinesweeperBoard & board;
     MSSFMLView & view;
-    float scalowanie();
 public:
     explicit MSSFMLCONTROL(MinesweeperBoard & board, MSSFMLView & view);
     void gameplay (sf::Event &event, sf::RenderWindow &win);
