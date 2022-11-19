@@ -13,11 +13,11 @@ void MSBoardTextView::view()
 {
     int height = Logic.get_height();
     int width = Logic.get_width();
-    for (int wiersz = 0; wiersz < height; wiersz++)
+    for (int row = 0; row < height; row++)
     {
-        for (int kolumna = 0; kolumna < width; kolumna++)
+        for (int col = 0; col < width; col++)
         {
-            cout << "[" << Logic.getFieldInfo(wiersz, kolumna) << "]";
+            cout << "[" << Logic.getFieldInfo(row, col) << "]";
         }
         cout << endl;
     }
